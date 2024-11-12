@@ -1,0 +1,6 @@
+@windingApi_HostAddress = http://localhost:5089
+
+GET {{windingApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
