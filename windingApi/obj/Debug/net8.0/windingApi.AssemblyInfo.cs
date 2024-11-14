@@ -10,10 +10,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("14607a0d-4702-401f-aa06-c124e383c215")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("windingApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+427994f885e3466d1735b45a192c17cd1d3e77a8")]
 [assembly: System.Reflection.AssemblyProductAttribute("windingApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("windingApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
