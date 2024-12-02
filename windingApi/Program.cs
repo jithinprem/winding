@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using windingApi.Controller.Repository;
+using windingApi.Controller.Repository.RepositoryInterfaces;
 using windingApi.Data;
 using windingApi.Models;
 using windingApi.Services;
@@ -25,7 +27,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<IdContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("IdConnectionString"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("IdConnectionString"), builder =>
+    {
+        builder.CommandTimeout(60);
+    });
 });
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -35,8 +40,15 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddTransient<IEmailSender, EmailService>();
 builder.Services.AddScoped<ContextSeedService>();
+builder.Services.AddScoped<AzureBlobService>();
+builder.Services.AddScoped<IBlogRepository, BlogRepository>();
+builder.Services.AddScoped<BlogService>();
+builder.Services.AddScoped<ILikeRepository, LikeRepository>();
+builder.Services.AddScoped<ITagDefinitionRepository, TagDefinitionRepository>();
+builder.Services.AddScoped<IBlogTagRepository, BlogTagRepository>();
 
 builder.Services.AddControllers();
+builder.Services.AddCors();
 
 builder.Services.AddIdentityCore<User>(options =>
     {
@@ -82,6 +94,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseRouting();
+app.UseCors(opt =>
+{
+    opt.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins(builder.Configuration["JWT:ClientUrl"]);
+});
+
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

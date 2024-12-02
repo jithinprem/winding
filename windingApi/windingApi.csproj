@@ -8,6 +8,7 @@
   </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Azure.Storage.Blobs" Version="12.23.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.10" />
@@ -19,6 +20,10 @@
         </PackageReference>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Models\CollectionBlog.cs" />
     </ItemGroup>
 
 </Project>

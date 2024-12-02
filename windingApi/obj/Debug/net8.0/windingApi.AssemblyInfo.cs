@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("windingApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+427994f885e3466d1735b45a192c17cd1d3e77a8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ea66e2d83d01e64015ace89fd51fe97f2000a8dc")]
 [assembly: System.Reflection.AssemblyProductAttribute("windingApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("windingApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

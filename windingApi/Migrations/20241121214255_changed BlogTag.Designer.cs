@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using windingApi.Data;
 
@@ -11,9 +12,11 @@ using windingApi.Data;
 namespace windingApi.Migrations
 {
     [DbContext(typeof(IdContext))]
-    partial class IdContextModelSnapshot : ModelSnapshot
+    [Migration("20241121214255_changed BlogTag")]
+    partial class changedBlogTag
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

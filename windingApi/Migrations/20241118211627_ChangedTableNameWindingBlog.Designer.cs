@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using windingApi.Data;
 
@@ -11,9 +12,11 @@ using windingApi.Data;
 namespace windingApi.Migrations
 {
     [DbContext(typeof(IdContext))]
-    partial class IdContextModelSnapshot : ModelSnapshot
+    [Migration("20241118211627_ChangedTableNameWindingBlog")]
+    partial class ChangedTableNameWindingBlog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,21 +160,13 @@ namespace windingApi.Migrations
 
             modelBuilder.Entity("windingApi.Models.BlogTag", b =>
                 {
-                    b.Property<int>("BlogTagId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BlogTagId"));
-
                     b.Property<int>("BlogId")
                         .HasColumnType("int");
 
                     b.Property<int>("TagDefinitionId")
                         .HasColumnType("int");
 
-                    b.HasKey("BlogTagId");
-
-                    b.HasIndex("BlogId");
+                    b.HasKey("BlogId");
 
                     b.HasIndex("TagDefinitionId");
 

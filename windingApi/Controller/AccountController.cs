@@ -95,7 +95,7 @@ public class AccountController: Microsoft.AspNetCore.Mvc.Controller
     }
 
     [Authorize]
-    [HttpPost("refresh-token")]
+    [HttpGet("refresh-token")]
     public async Task<ActionResult<UserDto>> RefreshToken()
     {
         var emailClaim = User.FindFirst(ClaimTypes.Email)?.Value;
@@ -109,23 +109,23 @@ public class AccountController: Microsoft.AspNetCore.Mvc.Controller
     }
 
     [HttpPost("verify-token")]
-    public async Task<IActionResult> VerifyEmailToken(string token, string email)
+    public async Task<IActionResult> VerifyEmailToken(EmailConfirmDto emailConfirmDto)
     {
         // Decode the encrypted token
         // check if the email exist and the ConfirmedEmail is false
         // if false make it true and retrun success
         // handle other scenarious like already confirmed, no user found, failed etc
-        var user = await _userManager.FindByEmailAsync(email.ToLower());
+        var user = await _userManager.FindByEmailAsync(emailConfirmDto.Email.ToLower());
         if (user == null) return Unauthorized("this email is not registered yet");
         if (user.EmailConfirmed) return BadRequest("email was confirmed");
         try
         {
-            var decodedTokenBytes = WebEncoders.Base64UrlDecode(token);
+            var decodedTokenBytes = WebEncoders.Base64UrlDecode(emailConfirmDto.Token);
             var decodedToken = Encoding.UTF8.GetString(decodedTokenBytes);
             var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
             if (result.Succeeded)
             {
-                return Ok("email confirmed");
+                return Ok(new JsonResult( new {message="email confirmed"}));
             }
 
             return BadRequest("email confirmation failed");
@@ -146,7 +146,7 @@ public class AccountController: Microsoft.AspNetCore.Mvc.Controller
         // if wrong password add to the lockout count
         if (! await _accountService.CheckUserExistAsync(loginDto.Email.ToLower()))
         {
-            return BadRequest(new JsonResult(new { title = "login failed", message = "account does not exist" }));
+            return Unauthorized("Invalid username or password");
         }
 
         var user = await _userManager.FindByEmailAsync(loginDto.Email.ToLower());

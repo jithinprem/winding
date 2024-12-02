@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using windingApi.Data;
 
@@ -11,9 +12,11 @@ using windingApi.Data;
 namespace windingApi.Migrations
 {
     [DbContext(typeof(IdContext))]
-    partial class IdContextModelSnapshot : ModelSnapshot
+    [Migration("20241116204743_Blog")]
+    partial class WindingBlog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,23 +158,48 @@ namespace windingApi.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("windingApi.Models.BlogTag", b =>
+            modelBuilder.Entity("windingApi.Models.Blog", b =>
                 {
-                    b.Property<int>("BlogTagId")
+                    b.Property<int>("BlogId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BlogTagId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BlogId"));
 
+                    b.Property<string>("BlobStorageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("BlogId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Blogs");
+                });
+
+            modelBuilder.Entity("windingApi.Models.BlogTag", b =>
+                {
                     b.Property<int>("BlogId")
                         .HasColumnType("int");
 
                     b.Property<int>("TagDefinitionId")
                         .HasColumnType("int");
 
-                    b.HasKey("BlogTagId");
-
-                    b.HasIndex("BlogId");
+                    b.HasKey("BlogId");
 
                     b.HasIndex("TagDefinitionId");
 
@@ -323,39 +351,6 @@ namespace windingApi.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("windingApi.Models.WindingBlog", b =>
-                {
-                    b.Property<int>("BlogId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BlogId"));
-
-                    b.Property<string>("BlobStorageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("BlogId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Blogs");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -407,9 +402,19 @@ namespace windingApi.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("windingApi.Models.Blog", b =>
+                {
+                    b.HasOne("windingApi.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("windingApi.Models.BlogTag", b =>
                 {
-                    b.HasOne("windingApi.Models.WindingBlog", "WindingBlog")
+                    b.HasOne("windingApi.Models.Blog", "Blog")
                         .WithMany()
                         .HasForeignKey("BlogId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -421,14 +426,14 @@ namespace windingApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("TagDefinition");
+                    b.Navigation("Blog");
 
-                    b.Navigation("WindingBlog");
+                    b.Navigation("TagDefinition");
                 });
 
             modelBuilder.Entity("windingApi.Models.Like", b =>
                 {
-                    b.HasOne("windingApi.Models.WindingBlog", "WindingBlog")
+                    b.HasOne("windingApi.Models.Blog", "Blog")
                         .WithMany()
                         .HasForeignKey("BlogId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -438,14 +443,14 @@ namespace windingApi.Migrations
                         .WithMany()
                         .HasForeignKey("UserId");
 
-                    b.Navigation("User");
+                    b.Navigation("Blog");
 
-                    b.Navigation("WindingBlog");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("windingApi.Models.SavedBlog", b =>
                 {
-                    b.HasOne("windingApi.Models.WindingBlog", "WindingBlog")
+                    b.HasOne("windingApi.Models.Blog", "Blog")
                         .WithMany()
                         .HasForeignKey("BlogId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -455,17 +460,7 @@ namespace windingApi.Migrations
                         .WithMany()
                         .HasForeignKey("UserId");
 
-                    b.Navigation("User");
-
-                    b.Navigation("WindingBlog");
-                });
-
-            modelBuilder.Entity("windingApi.Models.WindingBlog", b =>
-                {
-                    b.HasOne("windingApi.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.Navigation("Blog");
 
                     b.Navigation("User");
                 });
